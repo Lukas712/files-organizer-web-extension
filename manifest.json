@@ -1,0 +1,12 @@
+{
+  "manifest_version": 3,
+  "name": "File Organizer",
+  "description": "Runs a script to organize files in configured directories.",
+  "version": "1.0",
+  "background": {
+    "service_worker": "dist/controller/main.js",
+    "type": "module"
+  },
+  "permissions": ["downloads", "storage", "offscreen"],
+  "options_page": "view/index.html"
+  }
