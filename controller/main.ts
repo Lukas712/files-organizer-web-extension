@@ -1,19 +1,24 @@
 import { FolderController } from "./folder_controller.js";
 import { Observer } from "../observer/observe_folder.js";
-import { ExtensionStrategy } from "./extension_strategy.js";
-import { FileSchema } from "../schemas/file_schema.js";
+import { WebRulesRepository } from "../repository/web_rules_repository.js";
 
-const observer = new Observer();
-const controller = new FolderController();
-const file: FileSchema = {
-    extension: "pdf",
-    filename: "teste.pdf",
-    startDate: new Date()
-};
-const folder = { name: "Teste" };
-const extensionStrategy = new ExtensionStrategy(file, folder);
+async function bootstrap() {
+  const observer = new Observer();
+  const controller = new FolderController();
+  const repository = new WebRulesRepository();
 
-observer.addListener(controller);
-controller.addStrategy(extensionStrategy);
+  await repository.seedIfEmpty();
 
-console.log("File Organizer iniciado com sucesso!");
+  const rules = await repository.findAllRules();
+
+  for (const rule of rules) {
+    const strategy = repository.ruleToStrategy(rule);
+    controller.addStrategy(strategy);
+  }
+
+  observer.addListener(controller);
+
+  console.log("File Organizer iniciado com sucesso!");
+}
+
+bootstrap();
