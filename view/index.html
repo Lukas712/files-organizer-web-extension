@@ -9,6 +9,7 @@
 <body>
   <div id="app" class="container">
     <h1 class="title">File Organizer Web Extension</h1>
+    
 
     <div class="workspace" role="application">
       <section class="panel left-panel full-height" aria-label="Navegador de arquivos">
@@ -39,8 +40,8 @@
 
               <label for="fldConflict">Ação de conflito</label>
               <select id="fldConflict">
-                <option value="">(nenhuma)</option>
                 <option value="uniquify">uniquify</option>
+                <option value="">(nenhuma)</option>
               </select>
 
               <hr/>
@@ -80,6 +81,6 @@
     </div>
   </div>
 
-  <script type="module" src="script/app.js"></script>
+  <script type="module" src="../dist/view/models/index.js"></script>
 </body>
 </html>

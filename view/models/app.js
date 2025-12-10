@@ -167,7 +167,7 @@ function createFolder(){
 
 function createFile(){
   const base = selectedNode && selectedNode.type==='folder' ? selectedNode : root;
-  const f = new Node('file',{name:'novo_arquivo'});
+  const f = new Node('file',{name:''});
   base.children.push(f);
   render();
   selectNode(f);

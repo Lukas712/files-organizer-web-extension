@@ -179,3 +179,32 @@ input[type=text], input[type=datetime-local], select, textarea{
     grid-template-columns: 1fr;
     height:auto}
 }
+
+.label.selected {
+  background-color: #4a90e2; /* azul de destaque */
+  color: white;
+  border-radius: 4px;
+  padding: 2px 6px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.2);
+}
+
+.label:hover {
+  border: #2563eb 1px solid;;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#btnNewFolder:hover {
+  background-color: rgb(192, 255, 129);
+  cursor: pointer;
+}
+
+#btnNewFile:hover {
+  background-color: rgb(129, 212, 255);
+  cursor: pointer;
+}
+
+#btnDelete:hover {
+  background-color: rgb(255, 129, 129);
+  cursor: pointer;
+}

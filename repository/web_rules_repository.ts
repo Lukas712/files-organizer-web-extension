@@ -5,7 +5,6 @@ import { FolderRuleSchema } from "../schemas/folder_schema.js";
 
 export const DEFAULT_FOLDERS: FolderRuleSchema[] = [
   {
-    id: "docs",
     name: "Documents",
     enabled: true,
     autoOrganize: true,
@@ -14,7 +13,6 @@ export const DEFAULT_FOLDERS: FolderRuleSchema[] = [
     ]
   },
   {
-    id: "images",
     name: "Images",
     enabled: true,
     autoOrganize: true,
@@ -25,7 +23,6 @@ export const DEFAULT_FOLDERS: FolderRuleSchema[] = [
     ]
   },
   {
-    id: "archives",
     name: "Archives",
     enabled: true,
     autoOrganize: true,
@@ -42,7 +39,7 @@ export class WebRulesRepository implements RulesRepository {
 
         if (rule.extension) {
             const conflict = folders.some(f =>
-            f.fileRules?.some(r => r.extension === rule.extension && f.id !== folderId)
+            f.fileRules?.some(r => r.extension === rule.extension && f.name !== folderId)
             );
 
             if (conflict) {
@@ -50,7 +47,7 @@ export class WebRulesRepository implements RulesRepository {
             }
         }
 
-        const folder = folders.find(f => f.id === folderId)!;
+        const folder = folders.find(f => f.name === folderId)!;
         folder.fileRules?.push(rule);
 
         await chrome.storage.local.set({ rules: folders });

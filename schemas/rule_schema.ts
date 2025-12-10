@@ -6,4 +6,5 @@ export interface FileRuleSchema {
     finalUrl?: string;
     fileName?: string;
     dateTime?: Date;
+    folderId?: string
 }
