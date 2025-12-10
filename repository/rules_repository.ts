@@ -1,6 +1,7 @@
-import { RuleSchema } from "../schemas/rule_schema.js";
+import { FileRuleSchema } from "../schemas/rule_schema.js";
+import { FolderRuleSchema } from "../schemas/folder_schema.js";
 
 export interface RulesRepository {
-    saveRule(rule: RuleSchema): Promise<void>;
-    findAllRules(): Promise<RuleSchema[]>;
+    saveRule(folderId: string, rule: FileRuleSchema): Promise<void>;
+    findAllRules(): Promise<FolderRuleSchema[]>;
 }

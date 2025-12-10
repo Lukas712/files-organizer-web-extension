@@ -4,7 +4,6 @@ import { WebRulesRepository } from "../repository/web_rules_repository.js";
 
 async function bootstrap() {
   const observer = new Observer();
-  const controller = new FolderController();
   const repository = new WebRulesRepository();
 
   await repository.seedIfEmpty();
@@ -13,10 +12,9 @@ async function bootstrap() {
 
   for (const rule of rules) {
     const strategy = repository.ruleToStrategy(rule);
-    controller.addStrategy(strategy);
+    let controller = new FolderController(strategy, rule);
+    observer.addListener(controller);
   }
-
-  observer.addListener(controller);
 
   console.log("File Organizer iniciado com sucesso!");
 }

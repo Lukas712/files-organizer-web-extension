@@ -1,12 +1,14 @@
 import { Listener } from "../observer/listener.js";
 import { FileSchema } from "../schemas/file_schema.js";
+import { FolderRuleSchema } from "../schemas/folder_schema.js";
 import { OrganizeStrategy } from "./organize_strategy.js";
 
 export class FolderController implements Listener {
-  private strategies: OrganizeStrategy[] = [];
 
-  public addStrategy(strategy: OrganizeStrategy): void {
-    this.strategies.push(strategy);
+
+  public constructor(private strategy: OrganizeStrategy, private folder: FolderRuleSchema) {
+    this.strategy = strategy;
+    this.folder = folder;
   }
 
   public onNotify(file: chrome.downloads.DownloadItem): chrome.downloads.FilenameSuggestion | void {
@@ -14,19 +16,21 @@ export class FolderController implements Listener {
     const archive: FileSchema = {
       extension: file.filename?.split('.').pop()?.toLowerCase() || '',
       filename: file.filename || '',
-      startDate: new Date(file.startTime)
+      startDate: new Date(file.startTime),
+      mime: file.mime || '',
+      url: file.url || '',
+      finalUrl: file.finalUrl || '',
+      referrer: file.referrer || ''
     };
 
-    for (const strategy of this.strategies) {
-      if (strategy.supportsFile(archive)) {
-        const newPath = strategy.organize(archive);
-        console.log(`Organized file ${file.filename} to ${newPath}`);
+    if(this.strategy.supportsFile(archive)) {
+      const newPath = this.strategy.organize(archive);
+      console.log(`Organized file ${file.filename} to ${newPath}`);
 
-        return {
-          filename: newPath,
-          conflictAction: "uniquify"
-        };
-      }
+      return {
+        filename: newPath,
+        conflictAction: this.folder.conflictAction
+      };
     }
 
     console.log(`No strategy found for file ${file.filename}`);

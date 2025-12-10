@@ -1,31 +1,68 @@
 import { RulesRepository } from "./rules_repository.js";
-import { RuleSchema } from "../schemas/rule_schema.js";
-import { ExtensionStrategy } from "../controller/extension_strategy.js";
-import { FolderSchema } from "../schemas/folder_schema.js";
+import { FileRuleSchema } from "../schemas/rule_schema.js";
+import { FolderStrategy } from "../controller/folder_strategy.js";
+import { FolderRuleSchema } from "../schemas/folder_schema.js";
 
-const DEFAULT_RULES: RuleSchema[] = [
-  { extension: "pdf", folderName: "PDFs" },
-  { extension: "jpg", folderName: "Images" },
-  { extension: "png", folderName: "Images" },
-  { extension: "jpeg", folderName: "Images/Test" },
-  { extension: "zip", folderName: "Zips" }
+export const DEFAULT_FOLDERS: FolderRuleSchema[] = [
+  {
+    id: "docs",
+    name: "Documents",
+    enabled: true,
+    autoOrganize: true,
+    fileRules: [
+      { extension: "pdf", mime: "application/pdf" }
+    ]
+  },
+  {
+    id: "images",
+    name: "Images",
+    enabled: true,
+    autoOrganize: true,
+    fileRules: [
+      { extension: "jpg", mime: "image/jpeg" },
+      { extension: "jpeg", mime: "image/jpeg" },
+      { extension: "png", mime: "image/png" }
+    ]
+  },
+  {
+    id: "archives",
+    name: "Archives",
+    enabled: true,
+    autoOrganize: true,
+    fileRules: [
+      { extension: "zip", mime: "application/zip" }
+    ]
+  }
 ];
 
+
 export class WebRulesRepository implements RulesRepository {
-    async saveRule(rule: RuleSchema): Promise<void> {
-        const rules: RuleSchema[] = await this.findAllRules();
-        rules.push(rule);
-        await chrome.storage.local.set({ rules });
+    async saveRule(folderId: string, rule: FileRuleSchema): Promise<void> {
+        const folders= await this.findAllRules();
+
+        if (rule.extension) {
+            const conflict = folders.some(f =>
+            f.fileRules?.some(r => r.extension === rule.extension && f.id !== folderId)
+            );
+
+            if (conflict) {
+            throw new Error("Essa extensão já está associada a outra pasta.");
+            }
+        }
+
+        const folder = folders.find(f => f.id === folderId)!;
+        folder.fileRules?.push(rule);
+
+        await chrome.storage.local.set({ rules: folders });
     }
 
-    async findAllRules(): Promise<RuleSchema[]> {
-        const result = await chrome.storage.local.get<{ rules?: RuleSchema[] }>(["rules"]);
+    async findAllRules(): Promise<FolderRuleSchema[]> {
+        const result = await chrome.storage.local.get<{ rules?: FolderRuleSchema[] }>(["rules"]);
         return result.rules ?? [];
     }
 
-    public ruleToStrategy(rule: RuleSchema): ExtensionStrategy {
-        const folder: FolderSchema = { name: rule.folderName };
-        return new ExtensionStrategy(rule.extension, folder);
+    public ruleToStrategy(rule: FolderRuleSchema): FolderStrategy {
+        return new FolderStrategy(rule);
     }
 
     async seedIfEmpty(): Promise<void> {
@@ -34,7 +71,7 @@ export class WebRulesRepository implements RulesRepository {
         if (rules.length === 0) {
             console.log("Nenhuma regra encontrada. Criando regras padrão...");
             await chrome.storage.local.set({
-                rules: DEFAULT_RULES
+                rules: DEFAULT_FOLDERS
             });
         }
     }
