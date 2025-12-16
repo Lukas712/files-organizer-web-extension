@@ -1,5 +1,5 @@
 import { Node } from "./node.js";
-import { FolderRuleSchema } from "../../schemas/folder_schema.js";
+import { FolderRuleSchema } from "../../../schemas/folder_schema.js";
 
 export class DirectoryNode extends Node {
   children: Node[] = [];
@@ -17,9 +17,18 @@ export class DirectoryNode extends Node {
   }
 
   addChild(node: Node) {
+    if (node.parent) {
+      throw new Error("Node already has a parent");
+    }
+
+    if (node === this) {
+      throw new Error("Cannot add node to itself");
+    }
+
     node.parent = this;
     this.children.push(node);
   }
+
 
   removeChild(node: Node) {
     this.children = this.children.filter(c => c !== node);

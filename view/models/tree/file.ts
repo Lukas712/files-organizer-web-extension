@@ -1,11 +1,11 @@
 import { Node } from "./node.js";
-import { FileRuleSchema } from "../../schemas/rule_schema.js";
+import { FileRuleSchema } from "../../../schemas/rule_schema.js";
 
 export class FileNode extends Node {
   meta: FileRuleSchema = {};
 
   constructor(name?: string, meta?: FileRuleSchema) {
-    super("file", name);
+    super("file", name, );
     if (meta) this.meta = meta;
   }
 

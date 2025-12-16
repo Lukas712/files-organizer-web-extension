@@ -9,7 +9,7 @@ export abstract class Node {
   name: string;
   parent: DirectoryNode | null = null;
   type: NodeType;
-  temp: boolean = false; // indica se o nó ainda não tem nome definitivo
+  temp: boolean = false;
 
   constructor(type: NodeType, name?: string, id?: string) {
     this.type = type;
