@@ -4,9 +4,9 @@
   "description": "Runs a script to organize files in configured directories.",
   "version": "1.0",
   "background": {
-    "service_worker": "dist/controller/main.js",
+    "service_worker": "dist/src/main.js",
     "type": "module"
   },
   "permissions": ["downloads", "storage", "offscreen"],
-  "options_page": "view/index.html"
+  "options_page": "src/index.html"
   }
