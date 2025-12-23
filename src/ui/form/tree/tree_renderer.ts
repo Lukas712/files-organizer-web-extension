@@ -1,5 +1,6 @@
-import { Node } from "../../domain/entities/node.js";
-import { DirectoryNode } from "../../domain/entities/directory.js";
+import { Node } from "../../../domain/entities/node.js";
+import { DirectoryNode } from "../../../domain/entities/directory.js";
+import { FileNode } from "../../../domain/entities/file.js";
 
 export class TreeRenderer {
   private root!: DirectoryNode;
@@ -24,7 +25,12 @@ export class TreeRenderer {
     const li = document.createElement("li");
     li.classList.add("tree-node");
 
-    const isDisabled = isParentDisabled || node.enabled === false;
+    let nodeIsEnabled = true;
+    if (node instanceof DirectoryNode || node instanceof FileNode) {
+      nodeIsEnabled = (node as any).meta?.enabled !== false;
+    }
+
+    const isDisabled = isParentDisabled || !nodeIsEnabled;
 
     if (isDisabled) {
       li.classList.add("disabled");

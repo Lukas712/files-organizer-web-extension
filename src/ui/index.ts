@@ -1,6 +1,6 @@
-import { TreeManager } from "./tree/tree_manager.js";
-import { TreeRenderer } from "./tree/tree_renderer.js";
-import { TreeController } from "./tree/tree_controller.js";
+import { TreeManager } from "./form/tree/tree_manager.js";
+import { TreeRenderer } from "./form/tree/tree_renderer.js";
+import { TreeController } from "./form/tree/tree_controller.js";
 import { Toolbar } from "./components/toolbar.js";
 import { dom } from "./dom/elements.js";
 import { WebRulesRepository } from "../infrastructure/persistence/web_rules_repository.js";

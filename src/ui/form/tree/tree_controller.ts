@@ -1,13 +1,13 @@
 import { TreeManager } from "./tree_manager.js";
 import { TreeRenderer } from "./tree_renderer.js";
-import { Node } from "../../domain/entities/node.js";
-import { dom } from "../dom/elements.js";
-import { DirectoryNode } from "../../domain/entities/directory.js";
-import { FileNode } from "../../domain/entities/file.js";
-import { TreeToRulesSerializer } from "../tree_to_rules_serialize.js";
-import { FolderRuleSchema } from "../../infrastructure/schemas/folder_schema.js";
-import { Toast } from "../components/toast.js";
-import { FileRuleSchema } from "../../infrastructure/schemas/rule_schema.js";
+import { Node } from "../../../domain/entities/node.js";
+import { dom } from "../../dom/elements.js";
+import { DirectoryNode } from "../../../domain/entities/directory.js";
+import { FileNode } from "../../../domain/entities/file.js";
+import { TreeToRulesSerializer } from "../../tree_to_rules_serialize.js";
+import { FolderRuleSchema } from "../../../infrastructure/schemas/folder_schema.js";
+import { Toast } from "../../components/toast.js";
+import { FileRuleSchema } from "../../../infrastructure/schemas/rule_schema.js";
 
 export class TreeController {
   constructor(private tree: TreeManager, private renderer: TreeRenderer) {}
@@ -62,7 +62,10 @@ export class TreeController {
 
   createFolder(): void {
     if (this.tree.hasPendingTempNode()) {
-      Toast.show("Finalize a criação atual antes de criar outra regra.", "warning");
+      Toast.show(
+        "Finalize a criação atual antes de criar outra regra.",
+        "warning"
+      );
       return;
     }
 
@@ -75,7 +78,10 @@ export class TreeController {
 
   createFile(): void {
     if (this.tree.hasPendingTempNode()) {
-      Toast.show("Finalize a criação atual antes de criar outra regra.", "warning");
+      Toast.show(
+        "Finalize a criação atual antes de criar outra regra.",
+        "warning"
+      );
       return;
     }
 
@@ -139,15 +145,26 @@ export class TreeController {
 
   private updateFolderForm(node: DirectoryNode) {
     dom.folderForm.style.display = "block";
-    const meta = node.meta;
 
-    dom.fldName.value = meta.name ?? "";
-    dom.fldEnabled.checked = meta.enabled ?? true;
+    // Preenche os inputs individuais normalmente
+    dom.fldName.value = node.meta.name ?? "";
+    dom.fldEnabled.checked = node.enabled ?? true;
+    if (dom.fldConflict) dom.fldConflict.value = node.meta.conflictAction ?? "";
 
-    if (dom.fldConflict) dom.fldConflict.value = meta.conflictAction ?? "";
+    // Geração do JSON completo do nó (Meta + Filhos)
+    if (dom.fldFileRules) {
+      const fullFolderJson = {
+        ...node.meta,
+        name: node.name,
+        enabled: node.meta.enabled,
+        // Serializa as regras dos filhos
+        fileRules: node.children
+          .filter((child) => child instanceof FileNode)
+          .map((child) => (child as FileNode).meta),
+      };
 
-    if (dom.fldFileRules)
-      dom.fldFileRules.value = (node as any).rawRulesJson ?? "";
+      dom.fldFileRules.value = JSON.stringify(fullFolderJson, null, 2);
+    }
   }
 
   private updateFileForm(node: FileNode) {
@@ -155,7 +172,6 @@ export class TreeController {
     const meta = node.meta;
 
     dom.fileRuleName.value = meta.ruleName ?? "";
-    dom.fileRuleDescription.value = meta.ruleDescription ?? "";
 
     dom.fileEnabled.checked = meta.enabled ?? true;
     dom.fileExt.value = meta.extension ?? "";
@@ -174,6 +190,8 @@ export class TreeController {
     if (!node) return;
 
     if (node instanceof DirectoryNode) {
+      // 1. Capturar os valores dos inputs individuais PRIMEIRO
+      const isEnabled = dom.fldEnabled.checked;
       const newName = dom.fldName.value.trim();
 
       if (!newName) {
@@ -181,17 +199,51 @@ export class TreeController {
         throw new Error("Nome obrigatório");
       }
 
-      node.meta.name = newName;
-      node.name = newName;
-      node.meta.enabled = dom.fldEnabled.checked;
-      node.enabled = dom.fldEnabled.checked;
-      if (dom.fldConflict) {
-        const val = dom.fldConflict.value;
-        node.meta.conflictAction =
-          val === "uniquify" || val === "overwrite" ? val : undefined;
-      }
       if (dom.fldFileRules) {
-        (node as any).rawRulesJson = dom.fldFileRules.value;
+        try {
+          const rawValue = dom.fldFileRules.value.trim();
+          if (rawValue) {
+            const updatedData: FolderRuleSchema = JSON.parse(rawValue);
+
+            // SINCRONIZAÇÃO CRUCIAL: O checkbox manda no objeto
+            updatedData.enabled = isEnabled;
+            updatedData.name = newName;
+
+            // 2. Atualiza o Nó e o Meta
+            node.name = newName;
+            node.enabled = isEnabled;
+            node.meta = {
+              ...node.meta,
+              ...updatedData,
+              enabled: isEnabled, // Garante que o meta também receba o valor do checkbox
+              name: newName,
+            };
+
+            // 3. Sincroniza os filhos
+            if (Array.isArray(updatedData.fileRules)) {
+              node.children = node.children.filter(
+                (child) => child instanceof DirectoryNode
+              );
+
+              updatedData.fileRules.forEach((rule) => {
+                const newFile = new FileNode(
+                  rule.ruleName || "Nova Regra",
+                  rule
+                );
+                // Aqui garantimos que a propriedade .enabled do objeto FileNode
+                // seja igual à do seu meta.enabled interno
+                newFile.enabled = rule.enabled ?? true;
+                node.addChild(newFile);
+              });
+            }
+          }
+        } catch (e) {
+          Toast.show(
+            "Erro no JSON: A árvore não pôde ser atualizada.",
+            "error"
+          );
+          throw e;
+        }
       }
 
       node.temp = false;
@@ -208,9 +260,6 @@ export class TreeController {
 
       node.meta.ruleName = newRuleName;
       node.name = newRuleName;
-
-      node.meta.ruleDescription =
-        dom.fileRuleDescription.value.trim() || undefined;
 
       node.meta.enabled = dom.fileEnabled.checked ?? true;
       node.enabled = dom.fileEnabled.checked ?? true;

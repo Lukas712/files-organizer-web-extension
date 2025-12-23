@@ -73,6 +73,8 @@ body {
   background: var(--muted);
 }
 
+
+
 /* =========================
    LAYOUT
 ========================= */
@@ -168,11 +170,18 @@ body {
 }
 
 .left-top {
-  padding: 10px;
+  padding: 5px;
   border-bottom: 1px solid var(--border);
   display: flex;
   gap: 6px;
   background: var(--panel-bg);
+  align-items: center;
+}
+
+.left-top h2 {
+  margin-right: auto;
+  padding: 0 10px;
+  font-weight: normal;
 }
 
 .icon-btn {
@@ -671,4 +680,9 @@ body.dark .label.selected {
 .tree-node.disabled > .label:hover {
   opacity: 0.8;
   filter: grayscale(0.2);
+}
+
+h1.title {
+  font-size: 32px;
+  margin: 0;
 }

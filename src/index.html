@@ -10,7 +10,7 @@
     <div id="toast-container"></div>
     <div id="app" class="container">
       <header class="header">
-        <h1 class="title">📂 File Organizer</h1>
+        <h1 class="title">📂 File Organizer Web Extension</h1>
 
         <div class="header-controls">
           <div class="dropdown">
@@ -39,6 +39,7 @@
           aria-label="Navegador de arquivos"
         >
           <div class="left-top" role="toolbar" aria-label="Ações">
+            <h2>Explorer</h2>
             <button id="btnNewFolder" class="icon-btn" title="Criar pasta">
               📁
             </button>
@@ -97,7 +98,7 @@
                   <div class="note">Regras de arquivo (JSON)</div>
                   <textarea
                     id="fldFileRules"
-                    rows="6"
+                    rows="15"
                     placeholder='[ { "ext": ".png", "folder": "Images" } ]'
                   ></textarea>
                 </div>
@@ -112,10 +113,6 @@
                   <input id="fileRuleName" type="text" />
                 </div>
 
-                <div class="form-group">
-                  <label for="fileRuleDescription">Rule Description</label>
-                  <input id="fileRuleDescription" type="text" />
-                </div>
                 <div class="form-group checkbox">
                   <input id="fileEnabled" type="checkbox" />
                   <label for="fileEnabled">Habilitado</label>

@@ -23,8 +23,6 @@ export const dom = {
 
   // --- Inputs de Arquivo ---
   fileRuleName: document.getElementById("fileRuleName") as HTMLInputElement,
-  fileRuleDescription: document.getElementById("fileRuleDescription") as HTMLInputElement,
-  
   
   fileName: document.getElementById("fileName") as HTMLInputElement,
   fileEnabled: document.getElementById("fileEnabled") as HTMLInputElement,
