@@ -10,16 +10,27 @@
     <div id="toast-container"></div>
     <div id="app" class="container">
       <header class="header">
-        <h1 class="title">File Organizer Web Extension</h1>
+        <h1 class="title">📂 File Organizer</h1>
 
-        <button
-          id="btnToggleTheme"
-          class="icon-btn theme-toggle"
-          title="Alternar tema"
-          aria-label="Alternar modo claro/escuro"
-        >
-          🌙
-        </button>
+        <div class="header-controls">
+          <div class="dropdown">
+            <button class="icon-btn ghost" title="Ajuda">❓</button>
+            <div class="dropdown-menu">
+              <a href="#" id="menuChangelog">📝 Changelog</a>
+              <a href="#" id="menuAbout">ℹ️ About</a>
+              <a href="#" id="menuHelp">🆘 Help</a>
+            </div>
+          </div>
+
+          <button
+            id="btnToggleTheme"
+            class="icon-btn ghost theme-toggle"
+            title="Alternar tema"
+            aria-label="Alternar modo claro/escuro"
+          >
+            🌙
+          </button>
+        </div>
       </header>
 
       <div class="workspace" role="application">
@@ -56,66 +67,143 @@
               </div>
 
               <div id="folderForm" style="display: none">
-                <label for="fldName">Nome da pasta</label>
-                <input id="fldName" type="text" />
-
-                <div class="checkbox">
-                  <input id="fldEnabled" type="checkbox" /><label
-                    for="fldEnabled"
-                    >Habilitado</label
-                  >
-                </div>
-                <div class="checkbox">
-                  <input id="fldAutoOrg" type="checkbox" /><label
-                    for="fldAutoOrg"
-                    >Auto Organize</label
-                  >
+                <div class="form-group input-group" data-title="Nome da pasta">
+                  <label for="fldName">Nome da pasta</label>
+                  <input
+                    id="fldName"
+                    type="text"
+                    placeholder="Ex: Minha Pasta"
+                    autocomplete="off"
+                  />
                 </div>
 
-                <label for="fldConflict">Ação de conflito</label>
-                <select id="fldConflict">
-                  <option value="uniquify">uniquify</option>
-                  <option value="">(nenhuma)</option>
-                </select>
+                <div class="form-group checkbox">
+                  <input id="fldEnabled" type="checkbox" />
+                  <label for="fldEnabled">Habilitado</label>
+                </div>
+
+                <div class="form-group">
+                  <label for="fldConflict">Ação de conflito</label>
+                  <select id="fldConflict">
+                    <option value="uniquify">Renomear (uniquify)</option>
+                    <option value="overwrite">Sobrescrever</option>
+                    <option value="">(nenhuma)</option>
+                  </select>
+                </div>
 
                 <hr />
-                <div class="note">
-                  Regras de arquivo (exibe resumo; edição avançada em JSON)
+
+                <div class="form-group">
+                  <div class="note">Regras de arquivo (JSON)</div>
+                  <textarea
+                    id="fldFileRules"
+                    rows="6"
+                    placeholder='[ { "ext": ".png", "folder": "Images" } ]'
+                  ></textarea>
                 </div>
-                <textarea
-                  id="fldFileRules"
-                  rows="6"
-                  placeholder="[]"
-                ></textarea>
               </div>
 
               <div id="fileForm" style="display: none">
-                <label for="fileRuleName">Rule Name</label>
-                <input id="fileRuleName" type="text" />
+                <div
+                  class="form-group input-group"
+                  data-title="Name of the rule"
+                >
+                  <label for="fileRuleName">Rule Name</label>
+                  <input id="fileRuleName" type="text" />
+                </div>
 
-                <label for="fileRuleDescription">Rule Description</label>
-                <input id="fileRuleDescription" type="text" />
+                <div class="form-group">
+                  <label for="fileRuleDescription">Rule Description</label>
+                  <input id="fileRuleDescription" type="text" />
+                </div>
+                <div class="form-group checkbox">
+                  <input id="fileEnabled" type="checkbox" />
+                  <label for="fileEnabled">Habilitado</label>
+                </div>
 
-                <label for="fileExt">Extension</label>
-                <input id="fileExt" type="text" placeholder=".png, .txt" />
+                <div class="FormDiv">
+                  <div
+                    class="form-group input-group suggest-container"
+                    data-title="Ex: .png, .zip, * (curinga)"
+                  >
+                    <label for="fileExt">Extension</label>
+                    <input
+                      id="fileExt"
+                      type="text"
+                      placeholder=".png, .txt"
+                      autocomplete="off"
+                    />
+                    <div class="custom-suggestions" id="listExt">
+                      <div class="suggest-item" data-value="*">
+                        Qualquer extensão (*)
+                      </div>
+                      <div class="suggest-item" data-value="png">png</div>
+                      <div class="suggest-item" data-value="jpg">jpg</div>
+                      <div class="suggest-item" data-value="zip">zip</div>
+                    </div>
+                  </div>
 
-                <label for="fileMime">MIME</label>
-                <input id="fileMime" type="text" placeholder="image/png" />
+                  <div
+                    class="form-group input-group suggest-container"
+                    data-title="Ex: image/*, application/pdf"
+                  >
+                    <label for="fileMime">MIME</label>
+                    <input
+                      id="fileMime"
+                      type="text"
+                      placeholder="image/png"
+                      autocomplete="off"
+                    />
+                    <div class="custom-suggestions" id="listMime">
+                      <div class="suggest-item" data-value="image/*">
+                        Todas as Imagens (image/*)
+                      </div>
+                      <div class="suggest-item" data-value="video/*">
+                        Todos os Vídeos (video/*)
+                      </div>
+                      <div class="suggest-item" data-value="application/*">
+                        Aplicações (application/*)
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="form-group input-group"
+                  data-title="Referrer of the file"
+                >
+                  <label for="fileRef">Referrer</label>
+                  <input id="fileRef" type="text" />
+                </div>
 
-                <label for="fileRef">Referrer</label>
-                <input id="fileRef" type="text" />
+                <div class="form-group" data-title="URL of the file">
+                  <label for="fileUrl">URL</label>
+                  <input id="fileUrl" type="text" />
+                </div>
 
-                <label for="fileUrl">URL</label>
-                <input id="fileUrl" type="text" />
+                <div
+                  class="form-group input-group"
+                  data-title="Final URL of the file"
+                >
+                  <label for="fileFinalUrl">Final URL</label>
+                  <input id="fileFinalUrl" type="text" />
+                </div>
 
-                <label for="fileFinalUrl">Final URL</label>
-                <input id="fileFinalUrl" type="text" />
-
-                <label for="fileName">File Name</label>
-                <input id="fileName" type="text" />
-
-                <label for="fileDate">Date/Time</label>
-                <input id="fileDate" type="datetime-local" />
+                <div class="FormDiv">
+                  <div
+                    class="form-group input-group"
+                    data-title="Name of the file"
+                  >
+                    <label for="fileName">File Name</label>
+                    <input id="fileName" type="text" />
+                  </div>
+                  <div
+                    class="form-group input-group"
+                    data-title="Date/Time of the file"
+                  >
+                    <label for="fileDate">Date/Time</label>
+                    <input id="fileDate" type="date" />
+                  </div>
+                </div>
               </div>
             </div>
 

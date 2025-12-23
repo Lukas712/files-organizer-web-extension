@@ -7,28 +7,28 @@ export const DEFAULT_FOLDERS: FolderRuleSchema[] = [
   {
     name: "Documents",
     enabled: true,
-    autoOrganize: true,
     fileRules: [
-      { extension: "pdf", mime: "application/pdf", ruleName: "PDFs rule", ruleDescription: "Organize PDFs" },
-    ]
+      { extension: "pdf", mime: "application/pdf", ruleName: "PDFs rule", ruleDescription: "Organize PDFs", enabled: true },
+    ],
+    conflictAction: "uniquify"
   },
   {
     name: "Images",
     enabled: true,
-    autoOrganize: true,
     fileRules: [
-      { mime: "image/jpeg", ruleName: "JPGs rule", ruleDescription: "Organize JPEG images" },
-      { mime: "image/jpeg", ruleName: "JPEGs rule", ruleDescription: "Organize JPEG images" },
-      { mime: "image/png", ruleName: "PNGs rule", ruleDescription: "Organize PNG images"}
-    ]
+      { mime: "image/jpeg", ruleName: "JPGs rule", ruleDescription: "Organize JPEG images", enabled: true },
+      { mime: "image/jpeg", ruleName: "JPEGs rule", ruleDescription: "Organize JPEG images", enabled: true },
+      { mime: "image/png", ruleName: "PNGs rule", ruleDescription: "Organize PNG images", enabled: true },
+    ],
+    conflictAction: "uniquify"
   },
   {
     name: "Archives",
     enabled: true,
-    autoOrganize: true,
     fileRules: [
-      { mime: "application/zip", ruleName: "ZIPs rule", ruleDescription: "Organize ZIP archives" },
-    ]
+      { mime: "application/zip", ruleName: "ZIPs rule", ruleDescription: "Organize ZIP archives", enabled: true },
+    ],
+    conflictAction: "uniquify"
   }
 ];
 

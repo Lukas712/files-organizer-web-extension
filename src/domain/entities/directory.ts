@@ -3,12 +3,14 @@ import { FolderRuleSchema } from "../../infrastructure/schemas/folder_schema.js"
 
 export class DirectoryNode extends Node {
   children: Node[] = [];
+
   meta: FolderRuleSchema = {
     name: "",
     enabled: true,
-    autoOrganize: false,
     fileRules: [],
+    conflictAction: undefined,
   };
+
   expanded: boolean = true;
 
   constructor(name?: string, meta?: Partial<FolderRuleSchema>) {

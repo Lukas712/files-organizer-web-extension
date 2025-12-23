@@ -8,6 +8,7 @@ export abstract class Node {
   parent: DirectoryNode | null = null;
   type: NodeType;
   temp: boolean = false;
+  enabled: boolean = true;
 
   constructor(type: NodeType, name?: string, id?: string) {
     this.type = type;

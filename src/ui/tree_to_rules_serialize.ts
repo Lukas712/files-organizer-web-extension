@@ -13,7 +13,6 @@ export class TreeToRulesSerializer {
         return {
           name: dir.meta.name,
           enabled: dir.meta.enabled,
-          autoOrganize: dir.meta.autoOrganize,
           conflictAction: dir.meta.conflictAction,
           fileRules: dir.children
             .filter(c => c instanceof FileNode)

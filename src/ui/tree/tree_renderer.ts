@@ -18,10 +18,17 @@ export class TreeRenderer {
   private renderNode(
     node: Node,
     parentEl: HTMLElement,
-    selected?: Node | null
+    selected?: Node | null,
+    isParentDisabled: boolean = false
   ) {
     const li = document.createElement("li");
     li.classList.add("tree-node");
+
+    const isDisabled = isParentDisabled || node.enabled === false;
+
+    if (isDisabled) {
+      li.classList.add("disabled");
+    }
 
     const label = document.createElement("div");
     label.className = "label";
@@ -36,13 +43,22 @@ export class TreeRenderer {
         node.expanded = !node.expanded;
         this.render(this.root, selected);
       });
-
       label.appendChild(disclosure);
     } else {
       const spacer = document.createElement("span");
       spacer.className = "disclosure spacer";
       label.appendChild(spacer);
     }
+
+    const icon = document.createElement("span");
+    icon.className = "node-icon";
+
+    if (node instanceof DirectoryNode) {
+      icon.textContent = node.expanded ? "📂" : "📁";
+    } else {
+      icon.textContent = "📄";
+    }
+    label.appendChild(icon);
 
     const text = document.createElement("span");
     text.className = "node-text";
@@ -62,7 +78,9 @@ export class TreeRenderer {
       const ul = document.createElement("ul");
       ul.className = "node-children expanded";
 
-      node.children.forEach((child) => this.renderNode(child, ul, selected));
+      node.children.forEach((child) =>
+        this.renderNode(child, ul, selected, isDisabled)
+      );
 
       parentEl.appendChild(ul);
     }

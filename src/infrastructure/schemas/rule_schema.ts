@@ -1,5 +1,6 @@
 export interface FileRuleSchema {
     ruleName?: string;
+    enabled?: boolean;
     ruleDescription?: string;
     extension?: string;
     mime?: string;

@@ -10,6 +10,11 @@ export class Toast {
     toast.textContent = message;
 
     container.appendChild(toast);
+;
+    if(type === "error" || type === "warning") {
+      timeout = 5000;
+    }
+
 
     setTimeout(() => {
       toast.style.opacity = "0";

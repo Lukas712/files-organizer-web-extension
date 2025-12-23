@@ -13,18 +13,21 @@ export const dom = {
   folderForm: document.getElementById("folderForm") as HTMLDivElement,
   fileForm: document.getElementById("fileForm") as HTMLDivElement,
 
-  // Labels com os inputs para pastas
+  // --- Inputs de Pasta ---
   fldName: document.getElementById("fldName") as HTMLInputElement,
   fldEnabled: document.getElementById("fldEnabled") as HTMLInputElement,
+  // ADICIONADOS:
   fldAutoOrg: document.getElementById("fldAutoOrg") as HTMLInputElement,
   fldConflict: document.getElementById("fldConflict") as HTMLSelectElement,
+  fldFileRules: document.getElementById("fldFileRules") as HTMLTextAreaElement,
 
-  // Labels com os inputs para arquivos
+  // --- Inputs de Arquivo ---
   fileRuleName: document.getElementById("fileRuleName") as HTMLInputElement,
-  fileRuleDescription: document.getElementById(
-    "fileRuleDescription"
-  ) as HTMLInputElement,
+  fileRuleDescription: document.getElementById("fileRuleDescription") as HTMLInputElement,
+  
+  
   fileName: document.getElementById("fileName") as HTMLInputElement,
+  fileEnabled: document.getElementById("fileEnabled") as HTMLInputElement,
   fileExt: document.getElementById("fileExt") as HTMLInputElement,
   fileMime: document.getElementById("fileMime") as HTMLInputElement,
   fileRef: document.getElementById("fileRef") as HTMLInputElement,
@@ -32,7 +35,5 @@ export const dom = {
   fileFinalUrl: document.getElementById("fileFinalUrl") as HTMLInputElement,
   fileDate: document.getElementById("fileDate") as HTMLInputElement,
 
-  btnThemeToggle: document.getElementById(
-    "btnToggleTheme"
-  ) as HTMLButtonElement,
+  btnThemeToggle: document.getElementById("btnToggleTheme") as HTMLButtonElement,
 };
