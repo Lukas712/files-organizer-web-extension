@@ -8,6 +8,8 @@ export class TreeManager {
 
   constructor(root?: DirectoryNode) {
     this.root = root ?? new DirectoryNode("Downloads");
+    (this.root as any).isRoot = true; 
+    this.root.expanded = true;
   }
 
   createFolder(parent?: DirectoryNode): DirectoryNode {
@@ -27,6 +29,7 @@ export class TreeManager {
   }
 
   delete(node: Node): void {
+    if ((node as any).isRoot) return;
     if (!node.parent) return;
     node.parent.removeChild(node);
 
@@ -36,6 +39,8 @@ export class TreeManager {
   }
 
   getCurrentDirectory(): DirectoryNode {
+    if (!this.selectedNode) return this.root;
+
     if (this.selectedNode instanceof DirectoryNode) {
       return this.selectedNode;
     }

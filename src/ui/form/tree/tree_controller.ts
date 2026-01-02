@@ -146,24 +146,30 @@ export class TreeController {
   private updateFolderForm(node: DirectoryNode) {
     dom.folderForm.style.display = "block";
 
-    // Preenche os inputs individuais normalmente
+    if ((node as any).isRoot) {
+      dom.fldName.disabled = true;
+      dom.fldName.value = node.name;
+      dom.fldEnabled.disabled = true;
+      if (dom.fldFileRules) dom.fldFileRules.disabled = true;
+      return;
+    } else {
+      dom.fldName.disabled = false;
+      dom.fldEnabled.disabled = false;
+      if (dom.fldFileRules) dom.fldFileRules.disabled = false;
+    }
+
     dom.fldName.value = node.meta.name ?? "";
     dom.fldEnabled.checked = node.enabled ?? true;
     if (dom.fldConflict) dom.fldConflict.value = node.meta.conflictAction ?? "";
 
-    // Geração do JSON completo do nó (Meta + Filhos)
     if (dom.fldFileRules) {
-      const fullFolderJson = {
-        ...node.meta,
-        name: node.name,
-        enabled: node.meta.enabled,
-        // Serializa as regras dos filhos
+      const simpleMeta = {
+        conflictAction: node.meta.conflictAction,
         fileRules: node.children
           .filter((child) => child instanceof FileNode)
           .map((child) => (child as FileNode).meta),
       };
-
-      dom.fldFileRules.value = JSON.stringify(fullFolderJson, null, 2);
+      dom.fldFileRules.value = JSON.stringify(simpleMeta, null, 2);
     }
   }
 
@@ -189,8 +195,9 @@ export class TreeController {
     const node = this.tree.selectedNode;
     if (!node) return;
 
+    if ((node as any).isRoot) return;
+
     if (node instanceof DirectoryNode) {
-      // 1. Capturar os valores dos inputs individuais PRIMEIRO
       const isEnabled = dom.fldEnabled.checked;
       const newName = dom.fldName.value.trim();
 
@@ -205,21 +212,18 @@ export class TreeController {
           if (rawValue) {
             const updatedData: FolderRuleSchema = JSON.parse(rawValue);
 
-            // SINCRONIZAÇÃO CRUCIAL: O checkbox manda no objeto
             updatedData.enabled = isEnabled;
             updatedData.name = newName;
 
-            // 2. Atualiza o Nó e o Meta
             node.name = newName;
             node.enabled = isEnabled;
             node.meta = {
               ...node.meta,
               ...updatedData,
-              enabled: isEnabled, // Garante que o meta também receba o valor do checkbox
+              enabled: isEnabled,
               name: newName,
             };
 
-            // 3. Sincroniza os filhos
             if (Array.isArray(updatedData.fileRules)) {
               node.children = node.children.filter(
                 (child) => child instanceof DirectoryNode
@@ -230,8 +234,6 @@ export class TreeController {
                   rule.ruleName || "Nova Regra",
                   rule
                 );
-                // Aqui garantimos que a propriedade .enabled do objeto FileNode
-                // seja igual à do seu meta.enabled interno
                 newFile.enabled = rule.enabled ?? true;
                 node.addChild(newFile);
               });
@@ -282,27 +284,36 @@ export class TreeController {
   private validateNoDuplicateExtensions(rules: FolderRuleSchema[]): void {
     const seen = new Map<string, string>();
 
-    for (const folder of rules) {
-      for (const rule of folder.fileRules ?? []) {
-        if (!rule.extension) continue;
+    const walk = (folderList: FolderRuleSchema[]) => {
+      for (const folder of folderList) {
+        for (const rule of folder.fileRules ?? []) {
+          if (!rule.extension) continue;
 
-        const prev = seen.get(rule.extension);
-        if (prev && prev !== folder.name) {
-          throw new Error(
-            `Extensão ".${rule.extension}" já usada em "${prev}".`
-          );
+          const prev = seen.get(rule.extension);
+          if (prev && prev !== folder.name) {
+            throw new Error(
+              `Extensão ".${rule.extension}" já usada na pasta "${prev}".`
+            );
+          }
+          seen.set(rule.extension, folder.name);
         }
 
-        seen.set(rule.extension, folder.name);
+        if (folder.folders && folder.folders.length > 0) {
+          walk(folder.folders);
+        }
       }
-    }
+    };
+
+    walk(rules);
   }
   private validateRuleShadowing(rules: FolderRuleSchema[]): void {
     const allRules: { folderName: string; rule: FileRuleSchema }[] = [];
 
     for (const folder of rules) {
-      for (const rule of folder.fileRules) {
-        allRules.push({ folderName: folder.name, rule });
+      if (folder.fileRules) {
+        for (const rule of folder.fileRules) {
+          allRules.push({ folderName: folder.name, rule });
+        }
       }
     }
 

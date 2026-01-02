@@ -6,18 +6,27 @@ export class TreeToRulesSerializer {
 
   static serialize(root: DirectoryNode): FolderRuleSchema[] {
     return root.children
-      .filter(c => c instanceof DirectoryNode)
-      .map(folder => {
-        const dir = folder as DirectoryNode;
+      .filter((c): c is DirectoryNode => c instanceof DirectoryNode)
+      .map(folder => this.serializeDirectory(folder));
+  }
 
-        return {
-          name: dir.meta.name,
-          enabled: dir.meta.enabled,
-          conflictAction: dir.meta.conflictAction,
-          fileRules: dir.children
-            .filter(c => c instanceof FileNode)
-            .map(file => ({ ...(file as FileNode).meta }))
-        };
-      });
+  private static serializeDirectory(node: DirectoryNode): FolderRuleSchema {
+    return {
+      name: node.meta.name || node.name,
+      enabled: node.meta.enabled ?? node.enabled,
+      conflictAction: node.meta.conflictAction,
+
+      fileRules: node.children
+        .filter((c): c is FileNode => c instanceof FileNode)
+        .map(file => ({
+          ...(file as FileNode).meta,
+          ruleName: file.name,
+          enabled: file.enabled
+        })),
+
+      folders: node.children
+        .filter((c): c is DirectoryNode => c instanceof DirectoryNode)
+        .map(subFolder => this.serializeDirectory(subFolder))
+    };
   }
 }
