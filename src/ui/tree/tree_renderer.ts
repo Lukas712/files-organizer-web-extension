@@ -1,6 +1,6 @@
-import { Node } from "../../../domain/entities/node.js";
-import { DirectoryNode } from "../../../domain/entities/directory.js";
-import { FileNode } from "../../../domain/entities/file.js";
+import { Node } from "../../domain/entities/node.js";
+import { DirectoryNode } from "../../domain/entities/directory.js";
+import { FileNode } from "../../domain/entities/file.js";
 
 export class TreeRenderer {
   private root!: DirectoryNode;
