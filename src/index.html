@@ -10,17 +10,15 @@
     <div id="toast-container"></div>
     <div id="app" class="container">
       <header class="header">
-        <h1 class="title">📂 File Organizer Web Extension</h1>
+        <h1 class="title">
+          📂 File Organizer Web Extension
+          <small id="appVersion" class="app-version">1.0</small>
+        </h1>
 
         <div class="header-controls">
-          <div class="dropdown">
-            <button class="icon-btn ghost" title="Ajuda">❓</button>
-            <div class="dropdown-menu">
-              <a href="#" id="menuChangelog">📝 Changelog</a>
-              <a href="#" id="menuAbout">ℹ️ About</a>
-              <a href="#" id="menuHelp">🆘 Help</a>
-            </div>
-          </div>
+          <button class="icon-btn ghost" title="Changelog">📝</button>
+          <button class="icon-btn ghost" title="About">ℹ️</button>
+          <button class="icon-btn ghost" title="Help">🆘</button>
 
           <button
             id="btnToggleTheme"
@@ -96,11 +94,7 @@
 
                 <div class="form-group">
                   <div class="note">Regras de arquivo (JSON)</div>
-                  <textarea
-                    id="fldFileRules"
-                    rows="15"
-                    placeholder='[ { "ext": ".png", "folder": "Images" } ]'
-                  ></textarea>
+                  <textarea id="fldFileRules" rows="15" readonly></textarea>
                 </div>
               </div>
 

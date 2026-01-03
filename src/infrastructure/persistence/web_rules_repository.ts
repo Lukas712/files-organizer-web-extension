@@ -16,8 +16,7 @@ export const DEFAULT_FOLDERS: FolderRuleSchema[] = [
     name: "Images",
     enabled: true,
     fileRules: [
-      { mime: "image/jpeg", ruleName: "JPGs rule", ruleDescription: "Organize JPEG images", enabled: true },
-      { mime: "image/jpeg", ruleName: "JPEGs rule", ruleDescription: "Organize JPEG images", enabled: true },
+      { mime: "image/*", ruleName: "JPGs rule", ruleDescription: "Organize JPEG images", enabled: true },
       { mime: "image/png", ruleName: "PNGs rule", ruleDescription: "Organize PNG images", enabled: true },
     ],
     conflictAction: "uniquify"
@@ -71,5 +70,9 @@ export class WebRulesRepository implements RulesRepository {
                 rules: DEFAULT_FOLDERS
             });
         }
+    }
+
+    async saveRules(rules: FolderRuleSchema[]): Promise<void> {
+        await chrome.storage.local.set({ rules });
     }
 }

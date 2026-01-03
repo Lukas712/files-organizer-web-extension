@@ -1,5 +1,5 @@
 import { dom } from "../dom/elements.js";
-import { TreeController } from "../form/tree/tree_controller.js";
+import { TreeController } from "../tree/tree_controller.js";
 
 export class Toolbar {
   constructor(private controller: TreeController) {}
