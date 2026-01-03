@@ -1,0 +1,24 @@
+{
+  "name": "files-organizer-web-extension",
+  "private": true,
+  "version": "1.0.0",
+  "description": "This extension is maded to organize files in your pc automatically",
+  "main": "index.js",
+  "scripts": {
+    "test": "vitest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lukas712/files-organizer-web-extension.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Lukas712/files-organizer-web-extension/issues"
+  },
+  "homepage": "https://github.com/Lukas712/files-organizer-web-extension#readme",
+  "devDependencies": {
+    "vitest": "^4.0.16"
+  }
+}

@@ -13,7 +13,7 @@ export class TreeToRulesSerializer {
 
   private static serializeDirectory(dir: DirectoryNode): FolderRuleSchema {
     return {
-      name: dir.meta.name,
+      name: dir.name,
       enabled: dir.meta.enabled,
       conflictAction: dir.meta.conflictAction,
 
