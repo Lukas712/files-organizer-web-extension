@@ -4,6 +4,5 @@ export interface FolderRuleSchema {
   name: string;         
   enabled: boolean;       
   conflictAction?: "uniquify" | "overwrite";
-  fileRules?: FileRuleSchema[];
-  folders?: FolderRuleSchema[];
+  fileRules: FileRuleSchema[];
 }

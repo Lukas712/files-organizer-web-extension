@@ -23,7 +23,7 @@ export class TreeRenderer {
     isParentDisabled: boolean = false
   ) {
     const li = document.createElement("li");
-    li.classList.add("tree-node-container");
+    li.classList.add("tree-node");
 
     let nodeIsEnabled = true;
     if (node instanceof DirectoryNode || node instanceof FileNode) {
@@ -37,7 +37,7 @@ export class TreeRenderer {
     }
 
     const label = document.createElement("div");
-    label.className = "label tree-node";
+    label.className = "label";
 
     if (node instanceof DirectoryNode) {
       const disclosure = document.createElement("span");
@@ -88,7 +88,7 @@ export class TreeRenderer {
         this.renderNode(child, ul, selected, isDisabled)
       );
 
-      li.appendChild(ul);
+      parentEl.appendChild(ul);
     }
   }
 }
