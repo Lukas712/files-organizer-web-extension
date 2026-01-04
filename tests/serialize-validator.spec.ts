@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { DirectoryNode } from "./src/domain/entities/directory";
-import { TreeToRulesSerializer } from "./src/ui/tree_to_rules_serialize";
+import { DirectoryNode } from "../src/domain/entities/directory.js";
+import { TreeToRulesSerializer } from "../src/application/services/tree_to_rules_serialize.js";
 
 describe("TreeToRulesSerializer", () => {
   it("deve serializar pastas vazias", () => {

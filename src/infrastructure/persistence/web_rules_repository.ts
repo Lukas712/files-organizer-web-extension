@@ -8,7 +8,7 @@ export const DEFAULT_FOLDERS: FolderRuleSchema[] = [
     name: "Documents",
     enabled: true,
     fileRules: [
-      { extension: "pdf", mime: "application/pdf", ruleName: "PDFs rule", ruleDescription: "Organize PDFs", enabled: true },
+      {mime: "application/pdf", ruleName: "PDFs rule", ruleDescription: "Organize PDFs", enabled: true },
     ],
     conflictAction: "uniquify"
   },
@@ -16,8 +16,7 @@ export const DEFAULT_FOLDERS: FolderRuleSchema[] = [
     name: "Images",
     enabled: true,
     fileRules: [
-      { mime: "image/*", ruleName: "JPGs rule", ruleDescription: "Organize JPEG images", enabled: true },
-      { mime: "image/png", ruleName: "PNGs rule", ruleDescription: "Organize PNG images", enabled: true },
+      { mime: "image/*", ruleName: "All images rule", ruleDescription: "Organize JPEG images", enabled: true },
     ],
     conflictAction: "uniquify"
   },

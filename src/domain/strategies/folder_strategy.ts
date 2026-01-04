@@ -10,6 +10,10 @@ export class FolderStrategy implements OrganizeStrategy {
     if (!this.folder.enabled) return null;
 
     for (const rule of this.folder.fileRules || []) {
+      if (rule.enabled === false) continue;
+      
+      if (!this.hasAnyField(rule)) continue;
+
       if (this.matchesRule(file, rule)) {
         return rule;
       }
@@ -18,38 +22,66 @@ export class FolderStrategy implements OrganizeStrategy {
   }
 
   public organize(file: FileSchema): string {
-    console.log(
-      `Organizing file ${file.filename} into folder ${this.folder.name}`
-    );
     return this.folder.name + "/" + file.filename;
   }
 
   private matchesRule(file: FileSchema, rule: FileRuleSchema): boolean {
-    const checkMatch = (
-      pattern: string | undefined,
-      value: string
-    ): boolean => {
-      if (!pattern) return true;
-      const regexPattern = pattern
-        .replace(/[.+^${}()|[\]\\]/g, "\\$&")
-        .replace(/\*/g, ".*");
-      const regex = new RegExp(`^${regexPattern}$`, "i");
-      return regex.test(value);
+    const normalizeExt = (txt?: string) => {
+      if (!txt) return "";
+      const lower = txt.toLowerCase().trim();
+      return lower.startsWith(".") ? lower : "." + lower;
     };
 
-    const matchExtension = checkMatch(rule.extension, file.extension);
-    const matchMime = checkMatch(rule.mime, file.mime);
+    const normalizeMime = (txt?: string) => {
+      if (!txt) return "";
+      return txt.split(";")[0].toLowerCase().trim();
+    };
 
-    const matchUrl = rule.url ? file.url.includes(rule.url) : true;
-    const matchFinalUrl = rule.finalUrl
-      ? file.finalUrl.includes(rule.finalUrl)
-      : true;
-    const matchReferrer = rule.referrer
-      ? file.referrer.includes(rule.referrer)
-      : true;
+    const checkMatch = (ruleValue: string | undefined, fileValue: string, isExtension = false): boolean => {
+      if (!ruleValue) return true;
+      if (!fileValue) return false;
+
+      let p = isExtension ? normalizeExt(ruleValue) : ruleValue.toLowerCase().trim();
+      let v = isExtension ? normalizeExt(fileValue) : fileValue.toLowerCase().trim();
+
+      if (isExtension === false && ruleValue.includes("/")) {
+         v = normalizeMime(fileValue); 
+      }
+
+      if (p === "*") return true;
+      if (p === v) return true;
+
+      if (p.includes("*")) {
+        const regexStr = "^" + p.replace(/[.+^${}()|[\]\\]/g, "\\$&").replace(/\*/g, ".*") + "$";
+        return new RegExp(regexStr, "i").test(v);
+      }
+
+      return false;
+    };
+
+    const matchExtension = checkMatch(rule.extension, file.extension, true);
+    const matchMime = checkMatch(rule.mime, file.mime, false);
+    
+    const matchUrl = checkMatch(rule.url, file.url);
+    const matchFinalUrl = checkMatch(rule.finalUrl, file.finalUrl);
+    const matchReferrer = checkMatch(rule.referrer, file.referrer);
+    const matchFileName = rule.fileName 
+        ? (file.filename || "").toLowerCase().includes(rule.fileName.toLowerCase()) 
+        : true;
 
     return (
-      matchExtension && matchMime && matchUrl && matchFinalUrl && matchReferrer
+      matchExtension &&
+      matchMime &&
+      matchUrl &&
+      matchFinalUrl &&
+      matchReferrer &&
+      matchFileName
+    );
+  }
+
+  private hasAnyField(rule: FileRuleSchema): boolean {
+    return Boolean(
+      rule.extension || rule.mime || rule.url || rule.finalUrl || rule.referrer || rule.fileName
     );
   }
 }

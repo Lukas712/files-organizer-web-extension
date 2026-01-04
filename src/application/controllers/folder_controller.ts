@@ -34,5 +34,6 @@ export class FolderController implements Listener {
     }
 
     console.log(`No strategy found for file ${file.filename}`);
+    console.log(archive)
   }
 }

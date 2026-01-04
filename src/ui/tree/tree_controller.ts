@@ -42,6 +42,11 @@ export class TreeController {
     this.renderer.render(this.tree.root, node);
   }
 
+  public clearSelectionOnly(): void {
+    this.tree.selectedNode = null;
+    this.renderer.render(this.tree.root, null);
+  }
+
   createFolder(): void {
     if (this.tree.hasPendingTempNode()) {
       Toast.show(
@@ -122,5 +127,4 @@ export class TreeController {
   public commitPendingChanges(): void {
     this.applyFormChanges();
   }
-
 }

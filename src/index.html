@@ -16,14 +16,13 @@
         </h1>
 
         <div class="header-controls">
-          <button class="icon-btn ghost" title="Changelog">📝</button>
-          <button class="icon-btn ghost" title="About">ℹ️</button>
-          <button class="icon-btn ghost" title="Help">🆘</button>
+          <button class="icon-btn ghost" id="btnAbout" title="About">ℹ️</button>
+          <button class="icon-btn ghost" id="btnHelp" title="Help">🆘</button>
 
           <button
             id="btnToggleTheme"
             class="icon-btn ghost theme-toggle"
-            title="Alternar tema"
+            title="Change Theme"
             aria-label="Alternar modo claro/escuro"
           >
             🌙
@@ -38,19 +37,24 @@
         >
           <div class="left-top" role="toolbar" aria-label="Ações">
             <h2>Explorer</h2>
-            <button id="btnNewFolder" class="icon-btn" title="Criar pasta">
+            <button id="btnNewFolder" class="icon-btn" title="New Folder">
               📁
             </button>
-            <button id="btnNewFile" class="icon-btn" title="Criar arquivo">
+            <button id="btnNewFile" class="icon-btn" title="New File Rule">
               📄
             </button>
-            <button id="btnDelete" class="icon-btn" title="Deletar selecionado">
+            <button id="btnDelete" class="icon-btn" title="Delete Selected">
               🗑️
             </button>
           </div>
 
-          <div class="left-bottom" role="tree">
-            <ul id="treeRoot" class="tree" aria-label="Árvore de arquivos"></ul>
+          <div class="left-bottom">
+            <ul
+              id="treeRoot"
+              class="tree"
+              role="tree"
+              aria-label="Árvore de arquivos"
+            ></ul>
           </div>
         </section>
 
@@ -61,13 +65,12 @@
           <form id="propsForm" novalidate class="right-form">
             <div class="form-scroll" id="formScroll">
               <div id="noSelection">
-                Selecione um arquivo ou pasta à esquerda para editar suas
-                propriedades.
+                Select a file or folder to change properties.
               </div>
 
-              <div id="folderForm" style="display: none">
-                <div class="form-group input-group" data-title="Nome da pasta">
-                  <label for="fldName">Nome da pasta</label>
+              <div id="folderForm">
+                <div class="form-group input-group" data-title="Folder name">
+                  <label for="fldName">Folder Name</label>
                   <input
                     id="fldName"
                     type="text"
@@ -78,59 +81,85 @@
 
                 <div class="form-group checkbox">
                   <input id="fldEnabled" type="checkbox" />
-                  <label for="fldEnabled">Habilitado</label>
+                  <label for="fldEnabled">Enabled</label>
                 </div>
 
-                <div class="form-group">
-                  <label for="fldConflict">Ação de conflito</label>
+                <div
+                  class="form-group input-group"
+                  data-title="Determine conflict action for files"
+                >
+                  <label for="fldConflict">Conflict Action</label>
                   <select id="fldConflict">
-                    <option value="uniquify">Renomear (uniquify)</option>
-                    <option value="overwrite">Sobrescrever</option>
-                    <option value="">(nenhuma)</option>
+                    <option value="uniquify">Rename (uniquify)</option>
+                    <option value="overwrite">Overwrite</option>
+                    <option value="">Prompt</option>
                   </select>
                 </div>
 
                 <hr />
 
                 <div class="form-group">
-                  <div class="note">Regras de arquivo (JSON)</div>
+                  <label for="fldFileRules">Rules in folder (JSON)</label>
                   <textarea id="fldFileRules" rows="15" readonly></textarea>
                 </div>
               </div>
 
-              <div id="fileForm" style="display: none">
+              <div id="fileForm">
                 <div
                   class="form-group input-group"
                   data-title="Name of the rule"
                 >
                   <label for="fileRuleName">Rule Name</label>
-                  <input id="fileRuleName" type="text" />
+                  <input id="fileRuleName" type="text" placeholder="New rule" />
                 </div>
 
                 <div class="form-group checkbox">
                   <input id="fileEnabled" type="checkbox" />
-                  <label for="fileEnabled">Habilitado</label>
+                  <label for="fileEnabled">Enabled</label>
                 </div>
 
                 <div class="FormDiv">
                   <div
                     class="form-group input-group suggest-container"
-                    data-title="Ex: .png, .zip, * (curinga)"
+                    data-title="Ex: png, zip, *, txt..."
                   >
                     <label for="fileExt">Extension</label>
                     <input
                       id="fileExt"
                       type="text"
-                      placeholder=".png, .txt"
+                      placeholder="*, png, txt, zip..."
                       autocomplete="off"
                     />
                     <div class="custom-suggestions" id="listExt">
                       <div class="suggest-item" data-value="*">
-                        Qualquer extensão (*)
+                        Any Extension (*)
                       </div>
+
+                      <!-- Documentos -->
+                      <div class="suggest-item" data-value="pdf">pdf</div>
+                      <div class="suggest-item" data-value="docx">docx</div>
+                      <div class="suggest-item" data-value="xlsx">xlsx</div>
+                      <div class="suggest-item" data-value="pptx">pptx</div>
+                      <div class="suggest-item" data-value="txt">txt</div>
+
+                      <!-- Imagens -->
                       <div class="suggest-item" data-value="png">png</div>
                       <div class="suggest-item" data-value="jpg">jpg</div>
+                      <div class="suggest-item" data-value="jpeg">jpeg</div>
+                      <div class="suggest-item" data-value="svg">svg</div>
+                      <div class="suggest-item" data-value="webp">webp</div>
+
+                      <!-- Vídeos -->
+                      <div class="suggest-item" data-value="mp4">mp4</div>
+                      <div class="suggest-item" data-value="mkv">mkv</div>
+
+                      <!-- Compactados -->
                       <div class="suggest-item" data-value="zip">zip</div>
+                      <div class="suggest-item" data-value="rar">rar</div>
+                      <div class="suggest-item" data-value="7z">7z</div>
+
+                      <!-- Código -->
+                      <div class="suggest-item" data-value="json">json</div>
                     </div>
                   </div>
 
@@ -142,18 +171,27 @@
                     <input
                       id="fileMime"
                       type="text"
-                      placeholder="image/png"
+                      placeholder="application/exe"
                       autocomplete="off"
                     />
                     <div class="custom-suggestions" id="listMime">
-                      <div class="suggest-item" data-value="image/*">
-                        Todas as Imagens (image/*)
-                      </div>
-                      <div class="suggest-item" data-value="video/*">
-                        Todos os Vídeos (video/*)
+                      <div class="suggest-item" data-value="*/*">
+                        All types (*/*)
                       </div>
                       <div class="suggest-item" data-value="application/*">
-                        Aplicações (application/*)
+                        All applications (application/*)
+                      </div>
+                      <div class="suggest-item" data-value="image/*">
+                        All images (image/*)
+                      </div>
+                      <div class="suggest-item" data-value="video/*">
+                        All videos (video/*)
+                      </div>
+                      <div class="suggest-item" data-value="audio/*">
+                        All audios (audio/*)
+                      </div>
+                      <div class="suggest-item" data-value="text/*">
+                        All text (text/*)
                       </div>
                     </div>
                   </div>
@@ -163,12 +201,23 @@
                   data-title="Referrer of the file"
                 >
                   <label for="fileRef">Referrer</label>
-                  <input id="fileRef" type="text" />
+                  <input
+                    id="fileRef"
+                    type="text"
+                    placeholder="e.g. *.drive.google.com"
+                  />
                 </div>
 
-                <div class="form-group" data-title="URL of the file">
+                <div
+                  class="form-group input-group"
+                  data-title="URL of the file"
+                >
                   <label for="fileUrl">URL</label>
-                  <input id="fileUrl" type="text" />
+                  <input
+                    id="fileUrl"
+                    type="text"
+                    placeholder="e.g. *.instagram.com"
+                  />
                 </div>
 
                 <div
@@ -176,7 +225,11 @@
                   data-title="Final URL of the file"
                 >
                   <label for="fileFinalUrl">Final URL</label>
-                  <input id="fileFinalUrl" type="text" />
+                  <input
+                    id="fileFinalUrl"
+                    type="text"
+                    placeholder="e.g. *.instagram.com"
+                  />
                 </div>
 
                 <div class="FormDiv">
@@ -185,7 +238,11 @@
                     data-title="Name of the file"
                   >
                     <label for="fileName">File Name</label>
-                    <input id="fileName" type="text" />
+                    <input
+                      id="fileName"
+                      type="text"
+                      placeholder="e.g. download.zip"
+                    />
                   </div>
                   <div
                     class="form-group input-group"
@@ -196,11 +253,147 @@
                   </div>
                 </div>
               </div>
+              <div id="aboutForm" class="info-form" hidden>
+                <h2>About</h2>
+
+                <section class="about-card">
+                  <p class="about-desc">
+                    <strong>File Organizer Web Extension</strong> automatically
+                    organizes downloaded files based on user-defined rules.
+                  </p>
+
+                  <ul class="about-meta">
+                    <li>
+                      <strong>Version</strong
+                      ><span id="aboutVersion">1.0.0</span>
+                    </li>
+                    <li>
+                      <strong>GitHub</strong>
+                      <a
+                        href="https://github.com/Lukas712/files-organizer-web-extension"
+                        target="_blank"
+                        rel="noopener"
+                      >
+                        Repository
+                      </a>
+                    </li>
+                    <li>
+                      <strong>Issues</strong>
+                      <a
+                        href="https://github.com/Lukas712/files-organizer-web-extension/issues"
+                        target="_blank"
+                        rel="noopener"
+                      >
+                        Report a bug
+                      </a>
+                    </li>
+                    <li><strong>License</strong><span>MIT</span></li>
+                  </ul>
+                </section>
+
+                <p class="muted">
+                  Uses Chrome Downloads API and follows its filesystem
+                  limitations.
+                </p>
+              </div>
+
+              <div id="helpForm" class="info-form" hidden>
+                <h2>Help</h2>
+
+                <section class="help-card">
+                  <h3>How rules work</h3>
+                  <p>
+                    Rules are evaluated <strong>in order</strong>. The
+                    <strong>first matching rule</strong> is applied and stops
+                    evaluation.
+                  </p>
+                </section>
+
+                <section class="help-card">
+                  <h3>Matchers</h3>
+                  <ul class="pill-list">
+                    <li>Extension</li>
+                    <li>MIME</li>
+                    <li>URL</li>
+                    <li>Final URL</li>
+                    <li>Referrer</li>
+                    <li>Filename</li>
+                  </ul>
+
+                  <p class="muted">
+                    Case-insensitive. Supports wildcards (<code>*</code>) and
+                    RegExp. Empty matchers are ignored.
+                  </p>
+                </section>
+
+                <section class="help-card">
+                  <h3>MIME types</h3>
+
+                  <table class="help-table">
+                    <thead>
+                      <tr>
+                        <th>MIME</th>
+                        <th>Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>application/pdf</td>
+                        <td>PDF</td>
+                      </tr>
+                      <tr>
+                        <td>application/zip</td>
+                        <td>Archives</td>
+                      </tr>
+                      <tr>
+                        <td>image/png</td>
+                        <td>PNG</td>
+                      </tr>
+                      <tr>
+                        <td>image/jpeg</td>
+                        <td>JPEG</td>
+                      </tr>
+                      <tr>
+                        <td>audio/mpeg</td>
+                        <td>MP3</td>
+                      </tr>
+                      <tr>
+                        <td>video/*</td>
+                        <td>Videos</td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                  <p class="muted">
+                    Wildcards: <code>image/*</code>, <code>*/*</code> ·
+                    <a
+                      href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types"
+                      target="_blank"
+                      rel="noopener"
+                    >
+                      MDN reference
+                    </a>
+                  </p>
+                </section>
+
+                <section class="help-card">
+                  <h3>Path placeholders</h3>
+
+                  <ul class="code-list">
+                    <li><code>${filename}</code></li>
+                    <li><code>${mime}</code></li>
+                    <li><code>${url}</code></li>
+                    <li><code>${finalUrl}</code></li>
+                    <li><code>${referrer}</code></li>
+                    <li><code>${date:YYYY.MM.DD}</code></li>
+                  </ul>
+                </section>
+              </div>
             </div>
 
             <div class="form-actions">
               <button type="button" id="btnSave" class="save">
-                Salvar alterações
+                Save Changes
               </button>
             </div>
           </form>

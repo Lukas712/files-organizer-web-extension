@@ -23,7 +23,7 @@ export const dom = {
 
   // --- Inputs de Arquivo ---
   fileRuleName: document.getElementById("fileRuleName") as HTMLInputElement,
-  
+
   fileName: document.getElementById("fileName") as HTMLInputElement,
   fileEnabled: document.getElementById("fileEnabled") as HTMLInputElement,
   fileExt: document.getElementById("fileExt") as HTMLInputElement,
@@ -34,4 +34,11 @@ export const dom = {
   fileDate: document.getElementById("fileDate") as HTMLInputElement,
 
   btnThemeToggle: document.getElementById("btnToggleTheme") as HTMLButtonElement,
+  
+  aboutForm: document.getElementById("aboutForm") as HTMLDivElement,
+  helpForm: document.getElementById("helpForm") as HTMLDivElement,
+  btnAbout: document.getElementById("btnAbout") as HTMLButtonElement,
+  btnHelp: document.getElementById("btnHelp") as HTMLButtonElement,
+
+  leftPanel: document.querySelector(".left-panel") as HTMLElement,
 };

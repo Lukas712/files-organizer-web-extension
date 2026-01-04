@@ -10,5 +10,7 @@ export abstract class FormController implements FormStrategy {
     dom.noSelection.style.display = "none";
     dom.folderForm.style.display = "none";
     dom.fileForm.style.display = "none";
+    dom.aboutForm.style.display = "none";
+    dom.helpForm.style.display = "none";
   }
 }

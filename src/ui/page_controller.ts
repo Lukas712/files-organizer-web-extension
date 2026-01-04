@@ -7,8 +7,8 @@ import { FileForm } from "../ui/form/file_form.js";
 import { dom } from "../ui/dom/elements.js";
 
 import { WebRulesRepository } from "../infrastructure/persistence/web_rules_repository.js";
-import { RulesTreeBuilder } from "../ui/rules_tree_builder.js";
-import { SaveRulesService } from "./save_rules_service.js";
+import { RulesTreeBuilder } from "../application/services/rules_tree_builder.js";
+import { SaveRulesService } from "../application/services/save_rules_service.js";
 import { Toast } from "../ui/components/toast.js";
 
 export class PageController {
@@ -46,6 +46,7 @@ export class PageController {
 
       this.treeController.init();
       toolbar.init();
+      this.showNoSelection();
     } catch (e: any) {
       Toast.show(e.message ?? "Erro ao inicializar aplicação", "error");
     }
@@ -54,6 +55,9 @@ export class PageController {
   private bindGlobalEvents(): void {
     dom.btnSave.addEventListener("click", () => this.onSave());
     dom.btnThemeToggle.addEventListener("click", () => this.toggleTheme());
+
+    dom.btnAbout.addEventListener("click", () => this.showAbout());
+    dom.btnHelp.addEventListener("click", () => this.showHelp());
 
     document.querySelectorAll(".suggest-item").forEach((item) => {
       item.addEventListener("mousedown", (e) => {
@@ -67,6 +71,16 @@ export class PageController {
           input.dispatchEvent(new Event("input"));
         }
       });
+    });
+
+    document.addEventListener("mousedown", (e) => {
+      const target = e.target as HTMLElement;
+
+      if (target.closest(".left-panel")) return;
+      if (target.closest(".right-panel")) return;
+      if (target.closest(".header-controls")) return;
+
+      this.treeController.clearSelectionOnly();
     });
   }
 
@@ -88,5 +102,35 @@ export class PageController {
     dom.btnThemeToggle.textContent = document.body.classList.contains("dark")
       ? "☀️"
       : "🌙";
+  }
+
+  private showAbout(): void {
+    this.treeController.clearSelectionOnly();
+
+    dom.noSelection.style.display = "none";
+    dom.folderForm.style.display = "none";
+    dom.fileForm.style.display = "none";
+    dom.helpForm.style.display = "none";
+
+    dom.aboutForm.style.display = "block";
+  }
+  
+  private showHelp(): void {
+    this.treeController.clearSelectionOnly();
+  
+    dom.noSelection.style.display = "none";
+    dom.folderForm.style.display = "none";
+    dom.fileForm.style.display = "none";
+    dom.aboutForm.style.display = "none";
+    
+    dom.helpForm.style.display = "block";
+  }
+
+  private showNoSelection(): void{
+    dom.noSelection.style.display = "block";
+    dom.folderForm.style.display = "none";
+    dom.fileForm.style.display = "none";
+    dom.aboutForm.style.display = "none";
+    dom.helpForm.style.display = "none";
   }
 }

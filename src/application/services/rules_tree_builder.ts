@@ -1,6 +1,6 @@
-import { DirectoryNode } from "../domain/entities/directory.js";
-import { FileNode } from "../domain/entities/file.js";
-import { FolderRuleSchema } from "../infrastructure/schemas/folder_schema.js";
+import { DirectoryNode } from "../../domain/entities/directory.js";
+import { FileNode } from "../../domain/entities/file.js";
+import { FolderRuleSchema } from "../../infrastructure/schemas/folder_schema.js";
 
 // TODO: Mover para camada correta
 export class RulesTreeBuilder {

@@ -17,6 +17,14 @@ export class FolderForm extends FormController {
 
     if (dom.fldFileRules) {
       const rawValue = dom.fldFileRules.value.trim();
+      
+      const rawConflict = dom.fldConflict?.value;
+      const conflictAction: FolderRuleSchema["conflictAction"] =
+        rawConflict === "uniquify" ||
+        rawConflict === "overwrite" ||
+        rawConflict === "prompt"
+          ? rawConflict
+          : undefined;
       if (rawValue) {
         const updatedData: FolderRuleSchema = JSON.parse(rawValue);
 
@@ -30,6 +38,7 @@ export class FolderForm extends FormController {
           ...updatedData,
           enabled: isEnabled,
           name: newName,
+          conflictAction,
         };
       }
     }
